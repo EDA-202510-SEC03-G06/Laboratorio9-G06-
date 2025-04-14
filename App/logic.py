@@ -28,10 +28,10 @@ import os
 import csv
 import datetime
 from DataStructures.Tree import red_black_tree as rb
-
-# TODO Realice la importación del Árbol Rojo Negro
-# TODO Realice la importación de ArrayList (al) o SingleLinked (sl) como estructura de datos auxiliar para sus requerimientos
-# TODO Realice la importación de LinearProbing (lp) o Separate Chaining (sp) como estructura de datos auxiliar para sus requerimientos
+from DataStructures.List import array_list as al
+from DataStructures.List import single_linked_list as sl
+from DataStructures.Map import map_linear_probing as lp
+from DataStructures.Map import map_separate_chaining as sp
 
 data_dir = os.path.dirname(os.path.realpath('__file__')) + '/Data/'
 

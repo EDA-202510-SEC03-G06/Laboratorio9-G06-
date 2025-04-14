@@ -89,7 +89,7 @@ def update_area_index(map, crime):
     si el area es nueva, se crea una entrada para el indice y se adiciona
     y si el area son ["", " ", None] se utiliza el valor por defecto 9999
     """
-    area = crime.get(["REPORTING_AREA"], "").strip()
+    area = crime.get("REPORTING_AREA", "").strip()
     if not area:
         area = 9999
     entry = sp.get(map, area)

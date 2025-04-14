@@ -1,24 +1,24 @@
+from DataStructures.List import single_linked_list as sl
+
 def new_map():
     return {'key': None, 'value': None, 'left': None, 'right': None}
 
 def put(my_rbt, key, value):
     if my_rbt is None:
-        my_rbt = new_map()
+        return {'key': key, 'value': value, 'left': None, 'right': None}
+    if my_rbt['key'] is None:
+        my_rbt['key'] = key
+        my_rbt['value'] = value
+        return my_rbt
     if key < my_rbt['key']:
-        if my_rbt['left'] is None:
-            my_rbt['left'] = new_map()
-            put(my_rbt['left'], key, value)
-        else:
-            put(my_rbt['left'], key, value)
+        my_rbt['left'] = put(my_rbt['left'], key, value)
     elif key > my_rbt['key']:
-        if my_rbt['right'] is None:
-            my_rbt['right'] = new_map()
-            put(my_rbt['right'], key, value)
-        else:
-            put(my_rbt['right'], key, value)
+        my_rbt['right'] = put(my_rbt['right'], key, value)
     else:
         my_rbt['value'] = value
-        
+    return my_rbt
+
+
 def insert_node(root, key, value):
     if root is None:
         root = new_map()
@@ -33,7 +33,7 @@ def insert_node(root, key, value):
     return root
 
 def get(my_rbt, key):
-    if my_rbt is None:
+    if my_rbt is None or my_rbt['key'] is None:
         return None
     if key < my_rbt['key']:
         return get(my_rbt['left'], key)
@@ -97,3 +97,46 @@ def remove_node(root, key):
             root['value'] = min_node['value']
             root['right'] = remove_node(root['right'], min_node['key'])
             return root
+        
+def height(my_rbt):
+    if my_rbt is None or my_rbt['key'] is None:
+        return 0
+    left_height = height(my_rbt['left'])
+    right_height = height(my_rbt['right'])
+    return max(left_height, right_height) + 1
+
+def size(my_rbt):
+    if my_rbt is None or my_rbt['key'] is None:
+        return 0
+    left_size = size(my_rbt['left'])
+    right_size = size(my_rbt['right'])
+    return 1 + left_size + right_size
+
+def left_key(my_rbt):
+    if my_rbt is None:
+        return None
+    if my_rbt['left'] is None:
+        return my_rbt['key']
+    return left_key(my_rbt['left'])
+
+def right_key(my_rbt):
+    if my_rbt is None:
+        return None
+    if my_rbt['right'] is None:
+        return my_rbt['key']
+    return right_key(my_rbt['right'])
+
+def values(my_bst, key_initial, key_final):
+    result = {'elements': []}
+    values_range(my_bst, key_initial, key_final, result)
+    return result
+
+def values_range(root, key_initial, key_final, list_value):
+    if root is None or root.get('key') is None:
+        return
+    if root['key'] > key_initial:
+        values_range(root['left'], key_initial, key_final, list_value)
+    if key_initial <= root['key'] <= key_final:
+        sl.add_last(list_value, root['value'])
+    if root['key'] < key_final:
+        values_range(root['right'], key_initial, key_final, list_value)

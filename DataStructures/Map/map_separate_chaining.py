@@ -141,6 +141,17 @@ def size(my_map):
     """
     return my_map['size']
 
+def height(my_map):
+    if my_map is None or my_map['table'] is None:
+        return 0
+    max_height = 0
+    for i in range(al.size(my_map['table'])):
+        bucket = al.get_element(my_map['table'], i)
+        current_height = al.size(bucket)   
+        if current_height > max_height:
+            max_height = current_height
+    return max_height
+
 def is_empty(my_map):
     """
     Verifica si la tabla de símbolos se encuentra vacía.

@@ -342,6 +342,23 @@ def keys(my_rbt, key_lo, key_hi):
     _keys_range(my_rbt.get('root'), keys_list, key_lo, key_hi)
     return keys_list
 
+def left_key(my_rbt):
+    if my_rbt is None or my_rbt.get('root') is None:
+        return None
+    node = my_rbt['root']
+    while node.get('left') is not None:
+        node = node['left']
+    return node['key']
+
+def right_key(my_rbt):
+    if my_rbt is None or my_rbt.get('root') is None:
+        return None
+    node = my_rbt['root']
+    while node.get('right') is not None:
+        node = node['right']
+    return node['key']
+
+
 def _keys_range(node, keys_list, key_lo, key_hi):
     """Función auxiliar para keys"""
     if node is None:

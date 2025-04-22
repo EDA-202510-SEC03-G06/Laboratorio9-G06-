@@ -53,7 +53,7 @@ def new_logic():
 
     analyzer["crimes"] = al.new_list()
     analyzer["dateIndex"] = rbt.new_map()
-    analyzer["areaIndex"] = sp.new_map(num_elements=30, load_factor=0.5)
+    analyzer["areaIndex"] = rbt.new_map()
     return analyzer
 
 # Funciones para realizar la carga
@@ -91,14 +91,16 @@ def update_area_index(map, crime):
     """
     area = crime.get("REPORTING_AREA", "").strip()
     if not area:
-        area = 9999
-    entry = sp.get(map, area)
+        area = "9999"
+    else:
+        area = str(area)
+    entry = rbt.get(map, area)
     if entry is None:
         lista_crimes = sl.new_list()
         sl.add_last(lista_crimes, crime)
-        sp.put(map, area, lista_crimes)
+        rbt.put(map, area, lista_crimes)
     else:
-        sl.add_last(entry, crime) 
+        sl.add_last(entry, crime)
     return map
 
 
@@ -211,7 +213,12 @@ def index_height_areas(analyzer):
     """
     Altura del arbol por areas
     """
-    return sp.height(analyzer["areaIndex"])
+    if analyzer is None:
+        return 0
+    area_index = analyzer.get("areaIndex")
+    if area_index is None:
+        return 0
+    return rbt.height(area_index)
 
 
 def index_size_areas(analyzer):
@@ -226,17 +233,10 @@ def min_key_areas(analyzer):
     Llave mas pequena por areas
     """
     # TODO Retornar la llave más pequeña del árbol por áreas
-    min_key = None
-    for i in range(len(analyzer["areaIndex"]["table"])):
-        entry = analyzer["areaIndex"]["table"][i]
-        while entry is not None:
-            if min_key is None or entry["key"] < min_key:
-                min_key = entry["key"]
-            entry = entry["next"]
-    if min_key is not None:
-        return min_key 
-    else:
-        return 9999
+    if analyzer is None or analyzer.get("areaIndex") is None:
+        return "9999"
+    min_node = rbt.get_min_node(analyzer["areaIndex"].get('root'))
+    return str(min_node['key']) if min_node and 'key' in min_node else "9999"
 
 
 def max_key_areas(analyzer):
@@ -244,17 +244,11 @@ def max_key_areas(analyzer):
     Llave mas grande por areas
     """
     # TODO Retornar la llave más grande del árbol por áreas
-    max_key = None
-    for i in range(len(analyzer["areaIndex"]["table"])):
-        entry = analyzer["areaIndex"]["table"][i]
-        while entry is not None:
-            if max_key is None or entry["key"] > max_key:
-                max_key = entry["key"]
-            entry = entry["next"]
-    if max_key is not None:
-        return max_key
-    else:
-        return 9999
+    if analyzer is None or analyzer.get("areaIndex") is None:
+        return "9999"
+    max_node = rbt.get_max_node(analyzer["areaIndex"].get('root'))
+    return str(max_node['key']) if max_node and 'key' in max_node else "9999"
+
     
 def get_crimes_by_range_area(analyzer, initialArea, finalArea):
     """
@@ -264,19 +258,9 @@ def get_crimes_by_range_area(analyzer, initialArea, finalArea):
     initialArea = str(initialArea)
     finalArea = str(finalArea)
     totalcrimes = 0
-    keys = []
-    for i in analyzer["areaIndex"]["table"]:
-        if i is not None:
-            current = i
-            while current is not None:
-                keys.append(current["key"])
-                current = current["next"]
-    keys_in_range = []
-    for key in keys:
-        if initialArea <= key <= finalArea:
-           keys_in_range.append(key)
-    for key in keys_in_range:
-        crime_list = sp.get(analyzer["areaIndex"], key)
+    keys_in_range = rbt.keys(analyzer["areaIndex"], initialArea, finalArea)
+    for area in keys_in_range:
+        crime_list = rbt.get(analyzer["areaIndex"], area)
         if crime_list is not None:
             totalcrimes += sl.size(crime_list)
     return totalcrimes

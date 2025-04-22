@@ -89,6 +89,11 @@ def main():
             print('Elementos en el arbol: ' + str(logic.index_size(control)))
             print('Menor Llave: ' + str(logic.min_key(control)))
             print('Mayor Llave: ' + str(logic.max_key(control)))
+            print('Altura del arbol de areas: ' + str(logic.index_height_areas(control)))
+            print('Elementos en el arbol de areas: ' + str(logic.index_size_areas(control)))
+            print('Menor Llave de areas: ' + str(logic.min_key_areas(control)))
+            print('Mayor Llave de areas: ' + str(logic.max_key_areas(control)))
+
 
         elif int(inputs[0]) == 3:
             print("\nBuscando crimenes en un rango de fechas: ")

@@ -228,7 +228,6 @@ def min_key_areas(analyzer):
     """
     Llave mas pequena por areas
     """
-    # TODO Retornar la llave más pequeña del árbol por áreas
     if analyzer is None or analyzer.get("areaIndex") is None:
         return "9999"
     min_node = rbt.get_min_node(analyzer["areaIndex"].get('root'))
@@ -242,7 +241,6 @@ def max_key_areas(analyzer):
     """
     Llave mas grande por areas
     """
-    # TODO Retornar la llave más grande del árbol por áreas
     if analyzer is None or analyzer.get("areaIndex") is None:
         return "9999"
     max_node = rbt.get_max_node(analyzer["areaIndex"].get('root'))
@@ -260,16 +258,11 @@ def get_crimes_by_range_area(analyzer, initialArea, finalArea):
     initialArea = str(initialArea)
     finalArea = str(finalArea)
     totalcrimes = 0
-
-    print("Índice de áreas (areaIndex):")
-    print(analyzer["REPORTING_AREA"])
-
     keys_in_range = rbt.keys(analyzer["areaIndex"], initialArea, finalArea)
     for area in keys_in_range:
         crime_list = rbt.get(analyzer["areaIndex"], area)
         if crime_list is not None:
             totalcrimes += sl.size(crime_list)
-
     return totalcrimes
 
 

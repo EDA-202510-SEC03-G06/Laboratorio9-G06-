@@ -31,7 +31,6 @@ from DataStructures.Tree import red_black_tree as rbt
 from DataStructures.List import array_list as al
 from DataStructures.List import single_linked_list as sl
 from DataStructures.Map import map_linear_probing as lp
-from DataStructures.Map import map_separate_chaining as sp
 
 data_dir = os.path.dirname(os.path.realpath('__file__')) + '/Data/'
 
@@ -68,10 +67,7 @@ def load_data(analyzer, crimesfile):
         add_crime(analyzer, crime)
     return analyzer
 
-
-
 # Funciones para agregar informacion al analizador
-
 
 def add_crime(analyzer, crime):
     """
@@ -225,7 +221,7 @@ def index_size_areas(analyzer):
     """
     Numero de elementos en el indice por areas
     """
-    return sp.size(analyzer["areaIndex"])
+    return rbt.size(analyzer["areaIndex"])
 
 
 def min_key_areas(analyzer):
@@ -236,7 +232,10 @@ def min_key_areas(analyzer):
     if analyzer is None or analyzer.get("areaIndex") is None:
         return "9999"
     min_node = rbt.get_min_node(analyzer["areaIndex"].get('root'))
-    return str(min_node['key']) if min_node and 'key' in min_node else "9999"
+    if min_node is not None and 'key' in min_node:
+        return str(min_node['key'])
+    else:
+        return "9999" 
 
 
 def max_key_areas(analyzer):
@@ -247,23 +246,32 @@ def max_key_areas(analyzer):
     if analyzer is None or analyzer.get("areaIndex") is None:
         return "9999"
     max_node = rbt.get_max_node(analyzer["areaIndex"].get('root'))
-    return str(max_node['key']) if max_node and 'key' in max_node else "9999"
+    if max_node is not None and 'key' in max_node:
+        return str(max_node['key'])
+    else:
+        return "9999" 
 
     
 def get_crimes_by_range_area(analyzer, initialArea, finalArea):
     """
     Retorna el numero de crimenes en un rango de areas
     """
-    # TODO Completar la consulta de crimenes por rango de areas
+    initialArea = str(initialArea)
     initialArea = str(initialArea)
     finalArea = str(finalArea)
     totalcrimes = 0
+
+    print("Índice de áreas (areaIndex):")
+    print(analyzer["REPORTING_AREA"])
+
     keys_in_range = rbt.keys(analyzer["areaIndex"], initialArea, finalArea)
     for area in keys_in_range:
         crime_list = rbt.get(analyzer["areaIndex"], area)
         if crime_list is not None:
             totalcrimes += sl.size(crime_list)
+
     return totalcrimes
+
 
 def get_crimes_by_range(analyzer, initialDate, finalDate):
     """
